@@ -1,11 +1,26 @@
+import { Route, Routes } from "react-router-dom";
+import Header from "./components/shared/Header";
+import Footer from "./components/shared/Footer";
+import Home from "./pages/Home";
 
-function App() {
-
+function  App() {
   return (
     <>
-      <h1 className="text-center text-4xl mt-10 underline">Welcome to BookMyScreen</h1>
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow">
+          <Routes>
+            {/* Define your routes here */}
+            <Route path="/" element={<Home />} />
+            <Route path="/profile/:id" element={<h1>Profile Page</h1>} />
+            <Route path="/movies" element={<h1>Movies Page</h1>} />
+            {/* Add more routes as needed */}
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
