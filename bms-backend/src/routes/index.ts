@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.use("/movies", movieRouter);
 router.use("/theaters", theaterRouter);
-router.use("/show", showRouter);
+router.use("/shows", showRouter);
 
 export default router;
