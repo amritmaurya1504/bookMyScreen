@@ -1,8 +1,9 @@
 import React from 'react'
-import { allMovies, languages } from '../../utils/constants'
+import { languages } from '../../utils/constants'
 import MovieCard from './MovieCard'
 
-const MovieList = () => {
+const MovieList = ({allMovies}) => {
+
   return (
     <div className='w-full md:w-3/4 p-4'>
         <div className='flex flex-wrap gap-2 mb-4'>

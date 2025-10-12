@@ -5,22 +5,14 @@ import { MovieModel } from "../modules/movie/movie.model";
 import { TheaterModel } from "../modules/theater/theater.model";
 import { ShowModel } from "../modules/show/show.model";
 import { config } from "../config/config";
+import { generateSeatLayout } from "../utils/index"
 
-const generateSeatLayout = () => [
-  { row: "E", seats: Array.from({ length: 10 }, (_, i) => ({ number: i + 1, status: "AVAILABLE" })) },
-  ...["D", "C", "B", "A"].map(row => ({
-    row,
-    seats: Array.from({ length: 20 }, (_, i) => ({ number: i + 1, status: "AVAILABLE" })),
-  })),
-];
 
 const generatePriceMap = () =>
   new Map([
-    ["E", 510],
-    ["D", 290],
-    ["C", 290],
-    ["B", 290],
-    ["A", 270],
+    ["PREMIUM", 510],
+    ["EXECUTIVE", 290],
+    ["NORMAL", 270],
   ]);
 
 const formats = ["2D", "3D", "IMAX", "PVR PXL"];
