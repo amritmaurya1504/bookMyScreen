@@ -15,6 +15,7 @@ const Movies = () => {
     select: (res) => res.data.movies 
   });
 
+  console.log(allMovies)
 
   return (
     <div>
@@ -24,7 +25,7 @@ const Movies = () => {
         md:px-[100px] pb-10 pt-8"
       >
         <MovieFilters />
-        <MovieList allMovies={allMovies} />
+        <MovieList allMovies={allMovies ?? []} />
       </div>
     </div>
   );

@@ -30,8 +30,6 @@ const Recommended = () => {
     console.log("Something went wrong!");
   }
 
-  console.log(recMovies);
-
   return (
     <div className="w-full py-6 bg-white">
       <div className="max-w-screen-xl mx-auto px-4">

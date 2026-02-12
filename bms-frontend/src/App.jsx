@@ -7,8 +7,14 @@ import MovieDetails from "./pages/MovieDetails";
 import Profile from "./pages/Profile";
 import SeatLayout from "./pages/SeatLayout";
 import Checkout from "./pages/Checkout";
+import { Toaster } from "react-hot-toast";
+import { useLoadUser } from "./hooks/useLoadUser";
+import FullScreenLoader from "./components/shared/FullScreenLoader";
 
 function  App() {
+  
+  const { isLoading } = useLoadUser();
+  
 
    // Hide header/footer only on seat layout page
   const isSeatLayoutPage = useMatch(
@@ -17,18 +23,29 @@ function  App() {
 
   const isCheckoutPage = useMatch("/shows/:showId/:state/checkout");
 
+  if(isLoading) {
+    return <FullScreenLoader />
+  }
+
   return (
     <>
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          style : {
+            fontSize : "14px",
+          }
+        }}
+      />
       <div className="flex flex-col min-h-screen">
         {!isSeatLayoutPage && !isCheckoutPage && <Header />}
         <main className="flex-grow">
           <Routes>
             {/* Define your routes here */}
             <Route path="/" element={<Home />} />
-            <Route path="/profile/:id" element={<h1>Profile Page</h1>} />
+            <Route path="/profile/:id" element={<Profile />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/movies/:state/:movieName/:id/ticket" element={<MovieDetails />} />
-            <Route path="/profile" element={<Profile />} />
             <Route path="/movies/:movieId/:movieName/:state/theater/:theaterId/show/:showId/seat-layout" element={<SeatLayout />} />
             <Route path="/shows/:showId/:state/checkout" element={<Checkout />} />
             {/* Add more routes as needed */}
