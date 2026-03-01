@@ -1,4 +1,4 @@
-import { Route, Routes, useMatch } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useMatch } from "react-router-dom";
 import Header from "./components/shared/Header";
 import Footer from "./components/shared/Footer";
 import Home from "./pages/Home";
@@ -10,6 +10,13 @@ import Checkout from "./pages/Checkout";
 import { Toaster } from "react-hot-toast";
 import { useLoadUser } from "./hooks/useLoadUser";
 import FullScreenLoader from "./components/shared/FullScreenLoader";
+import { useAuth } from "./context/AuthContext";
+
+
+const PrivateRoute = () => {
+  const { auth }  = useAuth();
+  return auth ? <Outlet /> : <Navigate to="/" replace />;
+}
 
 function  App() {
   
@@ -43,10 +50,12 @@ function  App() {
           <Routes>
             {/* Define your routes here */}
             <Route path="/" element={<Home />} />
-            <Route path="/profile/:id" element={<Profile />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/movies/:state/:movieName/:id/ticket" element={<MovieDetails />} />
-            <Route path="/movies/:movieId/:movieName/:state/theater/:theaterId/show/:showId/seat-layout" element={<SeatLayout />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/movies/:movieId/:movieName/:state/theater/:theaterId/show/:showId/seat-layout" element={<SeatLayout />} />
+              <Route path="/profile/:id" element={<Profile />} />
+              </Route>
             <Route path="/shows/:showId/:state/checkout" element={<Checkout />} />
             {/* Add more routes as needed */}
           </Routes>

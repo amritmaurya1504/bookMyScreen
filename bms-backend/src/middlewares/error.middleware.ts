@@ -2,13 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 
 export const globalErrorHandler = (
-  err: unknown,
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
     // Default Response
-    let statusCode = 500;
+    let statusCode = err.status || err.statusCode || 500;
     let message = "Something went wrong!";
     let errors: { 
         field?: string;
