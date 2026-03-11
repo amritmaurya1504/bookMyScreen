@@ -50,7 +50,7 @@ const movies = [
     title: "F1: The Movie",
     genre: ["Sports", "Documentary"],
     rating: 9.5,
-    votes: 6800,
+    votes: 96800,
     languages: ["English", "Hindi", "Tamil", "Telugu"],
     certification: "UA16+",
     duration: "2h",

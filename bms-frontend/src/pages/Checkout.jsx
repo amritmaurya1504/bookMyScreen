@@ -1,45 +1,62 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/seat-layout/Header";
 import dayjs from "dayjs";
-import { calculateTotalPrice } from "../utils";
+import { calculateTotalPrice, groupSeatsByType } from "../utils";
 import { FaInfoCircle } from "react-icons/fa";
 import { BiSolidOffer } from "react-icons/bi";
 import { CiCircleQuestion, CiUser } from "react-icons/ci";
+import { useAuth } from "../context/AuthContext";
+import { useLocation } from "../context/LocationContext";
+import { useSeatContext } from "../context/SeatContext";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   // ✅ Mock static data
-  const shows = {
-    _id: "show123",
-    date: "12-10-2025",
-    startTime: "07:30 PM",
-    movie: {
-      title: "Interstellar",
-      certification: "UA13+",
-      languages: ["English", "Hindi"],
-      format: ["2D", "IMAX"],
-      posterUrl:
-        "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
-    },
-    theatre: {
-      name: "PVR Icon",
-      city: "Kolkata",
-      state: "West Bengal",
-    },
-  };
+  // const shows = {
+  //   _id: "show123",
+  //   date: "12-10-2025",
+  //   startTime: "07:30 PM",
+  //   movie: {
+  //     title: "Interstellar",
+  //     certification: "UA13+",
+  //     languages: ["English", "Hindi"],
+  //     format: ["2D", "IMAX"],
+  //     posterUrl:
+  //       "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
+  //   },
+  //   theatre: {
+  //     name: "PVR Icon",
+  //     city: "Kolkata",
+  //     state: "West Bengal",
+  //   },
+  // };
 
-  const selectedSeats = [
-    { type: "PREMIUM", seatNumber: "B5", price: 250 },
-    { type: "EXECUTIVE", seatNumber: "B6", price: 250 },
-  ];
+  // const selectedSeats = [
+  //   { type: "PREMIUM", seatNumber: "B5", price: 250 },
+  //   { type: "EXECUTIVE", seatNumber: "B6", price: 250 },
+  // ];
 
-  const user = {
-    name: "Amrit Raj",
-    phone: "9876543210",
-    email: "amrit@example.com",
-    state: "West Bengal",
-  };
+  // const user = {
+  //   name: "Amrit Raj",
+  //   phone: "9876543210",
+  //   email: "amrit@example.com",
+  //   state: "West Bengal",
+  // };
 
   //   const { base, tax, total } = calculateTotalPrice(selectedSeats);
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { location } = useLocation();
+  const { selectedSeats, shows: showData } = useSeatContext();
+  const { base, tax, total } = calculateTotalPrice(selectedSeats);
+
+  useEffect(() => {
+    console.log(showData)
+    if (!showData || selectedSeats.length === 0) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -52,32 +69,35 @@ const Checkout = () => {
             {/* Movie Details */}
             <div className="flex gap-4">
               <img
-                src={shows.movie.posterUrl}
-                alt={shows.movie.title}
+                src={showData?.movie.posterUrl}
+                alt={showData?.movie.title}
                 className="w-[60px] h-[90px] rounded object-cover"
               />
               <div>
-                <h3 className="font-semibold text-lg">{shows.movie.title}</h3>
+                <h3 className="font-semibold text-lg">
+                  {showData?.movie.title}
+                </h3>
                 <p className="text-sm text-gray-600">
-                  {shows.movie.certification} •{" "}
-                  {shows.movie.languages.join(", ")} •{" "}
-                  {shows.movie.format.join(", ")}
+                  {showData?.movie.certification} •{" "}
+                  {showData?.movie.languages.join(", ")} •{" "}
+                  {showData?.movie.format.join(", ")}
                 </p>
                 <p className="text-sm text-gray-600">
-                  {shows.theatre.name}, {shows.theatre.city},{" "}
-                  {shows.theatre.state}
+                  {showData?.theater.name}, {showData?.theater.city},{" "}
+                  {showData?.theater.state}
                 </p>
               </div>
             </div>
             {/* Show Details */}
             <div className="border border-gray-200 rounded-[24px] px-6 py-5">
               <p className="text-md font-medium border-b pb-5 border-gray-200">
-                {dayjs(shows.date, "DD-MM-YYYY")
+                {dayjs(showData?.date, "DD-MM-YYYY")
                   .format("D MMMM YYYY")
                   .split(" ")
                   .slice(0, 2)
                   .join(" ")}{" "}
-                &nbsp;• <span className="font-semibold">{shows.startTime}</span>
+                &nbsp;•{" "}
+                <span className="font-semibold">{showData?.startTime}</span>
               </p>
               <div className="flex items-center justify-between mt-4 mb-4">
                 <div>
@@ -86,17 +106,19 @@ const Checkout = () => {
                   </p>
                   <div className="text-sm text-gray-500">
                     <span className="font-medium">
-                      {selectedSeats.map((seat) => (
-                        <p className="font-medium">
-                          {seat.type} - {seat.seatNumber}
-                        </p>
-                      ))}
+                      {groupSeatsByType(selectedSeats).map(
+                        ({ type, seats }) => (
+                          <p key={type} className="font-medium">
+                            {type} - {seats.join(", ")}
+                          </p>
+                        ),
+                      )}
                     </span>
                   </div>
                 </div>
                 <p className="text-md font-semibold mt-2">
                   <span className="text-gray-700">₹</span>
-                  123
+                  {base}
                 </p>
               </div>
             </div>
@@ -128,15 +150,15 @@ const Checkout = () => {
             <div className="border border-gray-200 rounded-[24px] px-6 py-7 space-y-2">
               <div className="flex justify-between text-md">
                 <span className="text-sm text-gray-500">Order amount</span>
-                <span>₹123</span>
+                <span>₹{base}</span>
               </div>
               <div className="flex justify-between text-md pb-4">
                 <span className="font-semibold text-sm">Taxes & fees (5%)</span>
-                <span>₹34</span>
+                <span>₹{tax}</span>
               </div>
               <div className="flex justify-between text-md font-semibold border-t border-gray-200 pt-4">
                 <span>To be paid</span>
-                <span>₹500</span>
+                <span>₹{total}</span>
               </div>
             </div>
 
@@ -148,7 +170,7 @@ const Checkout = () => {
                 <p className="text-sm font-medium">{user.name}</p>
                 <p className="text-sm text-gray-600">+91-{user?.phone}</p>
                 <p className="text-sm text-gray-600">{user?.email}</p>
-                <p className="text-sm text-gray-600">{user.state}</p>
+                <p className="text-sm text-gray-600">{location}</p>
               </div>
             </div>
 
@@ -158,12 +180,12 @@ const Checkout = () => {
                 <CiCircleQuestion size={24} /> Terms and conditions
               </p>
             </div>
-            
+
             <div className="flex justify-between items-center bg-black rounded-[24px] px-6 py-4 cursor-pointer">
-                      <p className="text-white font-bold">
-                        ₹500 <span className="text-xs font-medium">TOTAL</span>
-                      </p>
-                      <p className="text-white font-medium">Proceed To Pay</p>
+              <p className="text-white font-bold">
+                ₹{total} <span className="text-xs font-medium">TOTAL</span>
+              </p>
+              <p className="text-white font-medium">Proceed To Pay</p>
             </div>
           </div>
         </div>
