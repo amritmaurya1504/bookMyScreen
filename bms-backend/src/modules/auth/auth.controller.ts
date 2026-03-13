@@ -174,7 +174,6 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
         return next(error);
     }
 
-    console.log("New access token:", accessToken);
     // 6. Send new tokens to client in cookie;
     res.cookie('accessToken', accessToken, {
         maxAge: 1000 * 60 * 60 * 24 * 30,

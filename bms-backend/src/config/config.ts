@@ -8,7 +8,9 @@ const _config = {
     refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
     hashingSecret: process.env.HASH_SECRET as string,
     emailUsername: process.env.EMAIL_USERNAME as string,
-    emailPassword: process.env.EMAIL_PASSWORD as string
+    emailPassword: process.env.EMAIL_PASSWORD as string,
+    redisHost: process.env.REDIS_HOST as string,
+    redisPort: parseInt(process.env.REDIS_PORT || "6379")
 }
 
 export const config = Object.freeze(_config);

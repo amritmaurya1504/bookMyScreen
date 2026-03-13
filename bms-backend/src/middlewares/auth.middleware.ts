@@ -28,8 +28,6 @@ export const isVerifiedUser = async (req: Request, res: Response, next: NextFunc
         }
 
         const decodedToken = await TokenService.verifyAccessToken(accessToken) as TokenPayload;
-        console.log(decodedToken);
-        console.log(decodedToken._id);
         const user = await UserService.getUserById(decodedToken._id);
 
         if (!user) {
