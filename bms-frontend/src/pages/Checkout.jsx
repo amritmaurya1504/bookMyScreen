@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/seat-layout/Header";
 import dayjs from "dayjs";
 import { calculateTotalPrice, groupSeatsByType } from "../utils";
@@ -9,41 +9,35 @@ import { useAuth } from "../context/AuthContext";
 import { useLocation } from "../context/LocationContext";
 import { useSeatContext } from "../context/SeatContext";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Checkout = () => {
-  // ✅ Mock static data
-  // const shows = {
-  //   _id: "show123",
-  //   date: "12-10-2025",
-  //   startTime: "07:30 PM",
-  //   movie: {
-  //     title: "Interstellar",
-  //     certification: "UA13+",
-  //     languages: ["English", "Hindi"],
-  //     format: ["2D", "IMAX"],
-  //     posterUrl:
-  //       "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
-  //   },
-  //   theatre: {
-  //     name: "PVR Icon",
-  //     city: "Kolkata",
-  //     state: "West Bengal",
-  //   },
-  // };
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes = 300 seconds
+  useEffect(() => {
 
-  // const selectedSeats = [
-  //   { type: "PREMIUM", seatNumber: "B5", price: 250 },
-  //   { type: "EXECUTIVE", seatNumber: "B6", price: 250 },
-  // ];
+    const interval = setInterval(() => {
+        setTimeLeft(prev => {
+          if(prev <= 1){
+            clearInterval(interval);
 
-  // const user = {
-  //   name: "Amrit Raj",
-  //   phone: "9876543210",
-  //   email: "amrit@example.com",
-  //   state: "West Bengal",
-  // };
+            socket.emit("unlock-seats", {
+              showId: showData._id,
+              userId: user._id
+            })
 
-  //   const { base, tax, total } = calculateTotalPrice(selectedSeats);
+            toast.error("Time expired!")
+            navigate("/");
+
+            return 0;
+          }
+          
+          return prev - 1;
+        })
+    }, 1000)
+
+    return () => clearInterval(interval) // cleanup
+
+  }, [])
 
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -63,6 +57,10 @@ const Checkout = () => {
       <Header type="checkout" />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
+        <p className="text-red-500 text-center mb-3 text-lg border rounded-[14px] border-dashed py-2 font-semibold">
+          Time left: {String(Math.floor(timeLeft / 60)).padStart(2, "0")}:
+          {String(timeLeft % 60).padStart(2, "0")}
+        </p>
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left Section */}
           <div className="flex-1 space-y-4">

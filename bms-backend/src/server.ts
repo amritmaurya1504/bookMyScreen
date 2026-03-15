@@ -4,6 +4,7 @@ import { config } from "./config/config";
 import connectDB from "./config/db";
 import "./config/redis";
 import http from "http";
+import { registerSocketHandlers } from "./socket/sockethandlers";
 
 const startServer = async () => {
   const port = config.port;
@@ -25,6 +26,7 @@ const startServer = async () => {
 
   io.on("connection", (socket) => {
     console.log("✅ User connected: ", socket.id);
+    registerSocketHandlers(socket, io);
 
     socket.on("disconnect", (reason) => {
       console.log("❌ User disconnected: ", socket.id, "Reason", reason);

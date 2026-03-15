@@ -1,12 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSeatContext } from "../../context/SeatContext";
+import { socket } from "../../utils/socket";
+import { useAuth } from "../../context/AuthContext";
 
 const Footer = ({ isSelected, selectedSeats, showData, state }) => {
   const navigate = useNavigate();
   const { setShows } = useSeatContext();
+  const { user } = useAuth();
 
   const handleNavigateToCheckout = () => {
+
+    // send lock request to socket.io server
+    socket.emit("lock-seats", {
+      showId: showData._id,
+      seatIds: selectedSeats,
+      userId: user._id
+    })
+
     navigate(`/shows/${showData._id}/${state}/checkout`);
     setShows(showData);
   }
