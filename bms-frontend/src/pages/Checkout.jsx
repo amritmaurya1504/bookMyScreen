@@ -10,34 +10,51 @@ import { useLocation } from "../context/LocationContext";
 import { useSeatContext } from "../context/SeatContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { razorPayScript } from "../utils/constants";
+import { useMutation } from "@tanstack/react-query";
+import { createOrderRazorpay, verifyPaymentRazorpay } from "../apis";
+import { socket } from "../utils/socket";
+
+// Load razorpay sdk
+function loadScript(src) {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+}
 
 const Checkout = () => {
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes = 300 seconds
   useEffect(() => {
-
     const interval = setInterval(() => {
-        setTimeLeft(prev => {
-          if(prev <= 1){
-            clearInterval(interval);
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
 
-            socket.emit("unlock-seats", {
-              showId: showData._id,
-              userId: user._id
-            })
+          socket.emit("unlock-seats", {
+            showId: showData._id,
+            userId: user._id,
+          });
 
-            toast.error("Time expired!")
-            navigate("/");
+          toast.error("Time expired!");
+          navigate("/");
 
-            return 0;
-          }
-          
-          return prev - 1;
-        })
-    }, 1000)
+          return 0;
+        }
 
-    return () => clearInterval(interval) // cleanup
+        return prev - 1;
+      });
+    }, 1000);
 
-  }, [])
+    return () => clearInterval(interval); // cleanup
+  }, []);
 
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -46,11 +63,77 @@ const Checkout = () => {
   const { base, tax, total } = calculateTotalPrice(selectedSeats);
 
   useEffect(() => {
-    console.log(showData)
+    console.log(showData);
     if (!showData || selectedSeats.length === 0) {
       navigate("/");
     }
   }, []);
+
+  /* Payment Integration Starts */
+
+  const createOrderMutation = useMutation({
+    mutationFn: (reqData) => createOrderRazorpay(reqData),
+    onSuccess: (data) => {
+      const orderData = data?.data;
+      const options = {
+        key: `${import.meta.env.VITE_RAZORPAY_API_KEY}`,
+        amount: orderData?.amount,
+        currency: orderData?.currency,
+        name: "BookMyScreen",
+        description: "Secure Payment for Your Meal",
+        order_id: orderData?.id,
+        handler: async function (response) {
+          console.log(response);
+          verifyPaymentMutation.mutate(response);
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+          contact: user?.phone,
+        },
+        theme: { color: "#025cca" },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const verifyPaymentMutation = useMutation({
+    mutationFn: (reqData) => verifyPaymentRazorpay(reqData),
+    onSuccess: (data) => {
+      toast.success(data?.data?.message)
+    },
+    onError: (err) => {
+      console.log(err);
+    }
+  })
+
+  const handleBookSeat = async () => {
+    try {
+      const res = await loadScript(razorPayScript);
+
+      if (!res) {
+        toast.error("Razorpay SDK failed to load. Are you online?", {
+          variant: "warning",
+        });
+        return;
+      }
+
+      const reqData = {
+        amount: total,
+      };
+
+      createOrderMutation.mutate(reqData);
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
+  /* Payment Integration Ends */
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -179,7 +262,10 @@ const Checkout = () => {
               </p>
             </div>
 
-            <div className="flex justify-between items-center bg-black rounded-[24px] px-6 py-4 cursor-pointer">
+            <div
+              onClick={handleBookSeat}
+              className="flex justify-between items-center bg-black rounded-[24px] px-6 py-4 cursor-pointer"
+            >
               <p className="text-white font-bold">
                 ₹{total} <span className="text-xs font-medium">TOTAL</span>
               </p>

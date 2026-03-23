@@ -11,7 +11,6 @@ dayjs.extend(customParseFormat);
 const Header = ({ showData, type }) => {
   const navigate = useNavigate();
   const { auth, user, toggleModal } = useAuth();
-  console.log(showData)
   return (
     <>
       <div className="border-b border-gray-200 shadow-sm bg-white">

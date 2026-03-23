@@ -102,3 +102,14 @@ export const groupShowsByTheatreAndMovie = (shows: IShow[]): GroupedShow[] => {
 
   return Object.values(grouped);
 };
+
+export const generateBookingRef = () => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let random = "";
+
+  for (let i = 0; i < 4; i++) {
+    random += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return random + Date.now().toString().slice(-3);
+};

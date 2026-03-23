@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import app from "./app";
 import { config } from "./config/config";
 import connectDB from "./config/db";
-import "./config/redis";
+// import "./config/redis";
 import http from "http";
 import { registerSocketHandlers } from "./socket/sockethandlers";
 
