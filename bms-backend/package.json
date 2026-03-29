@@ -26,6 +26,7 @@
     "mailgen": "^2.0.29",
     "mongoose": "^8.16.1",
     "nodemailer": "^7.0.4",
+    "razorpay": "^2.9.6",
     "socket.io": "^4.8.3",
     "zod": "^3.25.67"
   },
