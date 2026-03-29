@@ -25,6 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "mailgen": "^2.0.29",
     "mongoose": "^8.16.1",
+    "nanoid": "^5.1.7",
     "nodemailer": "^7.0.4",
     "razorpay": "^2.9.6",
     "socket.io": "^4.8.3",

@@ -71,9 +71,6 @@ const bookingSchema = new Schema<IBooking>(
   }
 );
 
-// Already added inline via index: true, but you can also define explicitly
-bookingSchema.index({ userId: 1 });
-bookingSchema.index({ showId: 1 });
 
 bookingSchema.pre("save", function (next) {
   this.seats.sort();

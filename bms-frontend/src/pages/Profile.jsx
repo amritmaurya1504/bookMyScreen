@@ -1,13 +1,21 @@
-import React, { use } from "react";
+import React, { useEffect } from "react";
 import { tabs } from "../utils/constants";
 import { IoIosLogOut, IoMdAdd } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
 import BookingHistory from "../components/profile/BookingHistory";
 import { useAuth } from "../context/AuthContext";
+import { useParams } from "react-router-dom";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = React.useState("Profile");
   const { user, logoutRequest } = useAuth();
+  const { tab } = useParams();
+
+  useEffect(() => {
+    if (tab && tabs.includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [tab]);
 
   const handleLogout = () => {
     console.log("click")
@@ -28,7 +36,7 @@ const Profile = () => {
                   : "text-gray-600 hove:text-black"
               }`}
             >
-              {tab}
+              {tab.toLocaleUpperCase()}
             </button>
           ))}
         </div>
@@ -37,7 +45,7 @@ const Profile = () => {
       <div className="min-h-screen py-10 px-4 bg-gray-100">
         <div className="max-w-6xl mx-auto">
           {/* Profile Section */}
-          {activeTab === "Profile" && (
+          {activeTab === "profile" && (
             <>
               {/* Headers */}
               <div className="bg-gradient-to-r from-gray-800 to-[#f74565] rounded-t-md px-6 py-6 flex items-center gap-6 text-white">
@@ -140,7 +148,7 @@ const Profile = () => {
           )}
 
             {/* Bookings Section */}
-            {activeTab === "Your Orders" && <BookingHistory />}
+            {activeTab === "bookings" && <BookingHistory />}
         </div>
       </div>
     </>

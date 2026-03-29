@@ -28,6 +28,10 @@ export const getUser = () => axiosWrapper.get("/users/me");
 export const createOrderRazorpay = (data) => axiosWrapper.post("/payment/create-order", data);
 export const verifyPaymentRazorpay = (data) => axiosWrapper.post("/payment/verify-payment", data);
 
+// Booking APIS
+export const bookShow = (data) => axiosWrapper.post("/book", data);
+export const getBookings = () => axiosWrapper.get("/book");
+
 // Interceptor
 
 axiosWrapper.interceptors.response.use(

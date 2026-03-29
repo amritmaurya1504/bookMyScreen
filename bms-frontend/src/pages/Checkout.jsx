@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { razorPayScript } from "../utils/constants";
 import { useMutation } from "@tanstack/react-query";
-import { createOrderRazorpay, verifyPaymentRazorpay } from "../apis";
+import { bookShow, createOrderRazorpay, verifyPaymentRazorpay } from "../apis";
 import { socket } from "../utils/socket";
 
 // Load razorpay sdk
@@ -41,6 +41,7 @@ const Checkout = () => {
           socket.emit("unlock-seats", {
             showId: showData._id,
             userId: user._id,
+            selectedSeats,
           });
 
           toast.error("Time expired!");
@@ -85,6 +86,19 @@ const Checkout = () => {
         handler: async function (response) {
           console.log(response);
           verifyPaymentMutation.mutate(response);
+
+          const reqData = {
+            showId : showData._id,
+            seats: selectedSeats,
+            paymentId : response.razorpay_payment_id,
+            bookingFee: {
+              ticketPrice: base,
+              convenience: tax,
+              total: total,
+            },
+          };
+
+          bookTicketMutation.mutate(reqData);
         },
         prefill: {
           name: user?.name,
@@ -105,12 +119,29 @@ const Checkout = () => {
   const verifyPaymentMutation = useMutation({
     mutationFn: (reqData) => verifyPaymentRazorpay(reqData),
     onSuccess: (data) => {
-      toast.success(data?.data?.message)
+      toast.success(data?.data?.message);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const bookTicketMutation = useMutation({
+    mutationFn: (reqData) => bookShow(reqData),
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success(data?.data?.message);
+      socket.emit("unlock-seats", {
+        showId: showData._id,
+        userId: user._id,
+        selectedSeats,
+      });
+      navigate(`/profile/${user._id}/bookings`);
     },
     onError: (err) => {
       console.log(err);
     }
-  })
+  });
 
   const handleBookSeat = async () => {
     try {

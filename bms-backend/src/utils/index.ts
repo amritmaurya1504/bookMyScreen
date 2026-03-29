@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { IMovie } from "../modules/movie/movie.interface";
 import { IShow } from "../modules/show/show.interface";
 import { IThreater } from "../modules/theater/theater.interface";
+import { customAlphabet } from "nanoid";
 
 type GroupedShow = {
   movie: Types.ObjectId | IMovie;
@@ -103,13 +104,9 @@ export const groupShowsByTheatreAndMovie = (shows: IShow[]): GroupedShow[] => {
   return Object.values(grouped);
 };
 
+
+// only uppercase + numbers (clean for users)
+const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 8);
 export const generateBookingRef = () => {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  let random = "";
-
-  for (let i = 0; i < 4; i++) {
-    random += chars[Math.floor(Math.random() * chars.length)];
-  }
-
-  return random + Date.now().toString().slice(-3);
+  return `BMS-${nanoid()}`;
 };
