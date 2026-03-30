@@ -35,9 +35,9 @@ const toDateWithTime = (baseDate: Date, timeStr: string) => {
 };
 
 export const seedShow = async () => {
-  const movieIds = ["69b175f1c6348a9ed819baf6", "69b175f1c6348a9ed819baf7"];
-  const movies = await MovieModel.find({ _id: { $in: movieIds } });
-  const theatres = await TheaterModel.find({ state: "West Bengal" });
+  // const movieIds = ["69b175f1c6348a9ed819baf6", "69b175f1c6348a9ed819baf7"];
+  const movies = await MovieModel.find();
+  const theatres = await TheaterModel.find();
 
   if (!movies.length || !theatres.length) {
     console.error("Movies or theatres not found. Please check IDs or state name.");
