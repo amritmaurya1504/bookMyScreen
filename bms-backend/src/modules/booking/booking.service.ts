@@ -4,6 +4,8 @@ import { IBooking } from "./booking.interface";
 import BookingModel from "./booking.model";
 import Razorpay from "razorpay";
 import { config } from "../../config/config";
+import { updateSeatStatus } from "../show/show.service";
+import path from "path";
 
 
 export const createBooking = async (bookingData: IBooking, userId: string) => {
@@ -62,8 +64,7 @@ export const createBooking = async (bookingData: IBooking, userId: string) => {
          ], {session});
 
          // 🔹 8. Update Seat Availability in Show Document
-         //  "A1" -> ROW A Number 1
-
+         await updateSeatStatus(showId, seats, "BOOKED", session);
 
          // 🔹 9. Commit Transaction
         await session.commitTransaction();
@@ -80,3 +81,23 @@ export const createBooking = async (bookingData: IBooking, userId: string) => {
 
 
 };
+
+export const getAllBookings = async (userId : string) => {
+    return await BookingModel.find({userId})
+    .populate(
+        {
+            path : "showId",
+            select : "startTime date audioType format",
+            populate : [
+                {
+                path : "movieId",
+                select : "title posterUrl duration"
+            },
+            {
+                path : "theatreId",
+                select : "name location city state"
+            }
+            ]
+        }
+    ).sort({ createdAt : -1 }); // latest booking first
+}

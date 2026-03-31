@@ -83,7 +83,7 @@ export const seedShow = async () => {
 };
 
 mongoose
-  .connect(config.databaseUrl as string)
+  .connect(config.databaseReplicaSet as string)
   .then(async () => {
     console.log("DB connected");
     await ShowModel.deleteMany({});

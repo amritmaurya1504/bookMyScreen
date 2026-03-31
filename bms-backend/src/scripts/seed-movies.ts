@@ -152,7 +152,7 @@ const movies = [
 
 const seedMovies = async () => {
   try {
-    await mongoose.connect(config.databaseUrl as string);
+    await mongoose.connect(config.databaseReplicaSet as string);
     console.log("Connected to DB");
 
     await MovieModel.deleteMany();
