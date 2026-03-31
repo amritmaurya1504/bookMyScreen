@@ -2,7 +2,7 @@ import mainLogo from "../../assets/main-icon.png";
 import { FaSearch, FaUser } from "react-icons/fa";
 import { useLocation } from "../../context/LocationContext";
 import map from "../../assets/pin.gif";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SignInModel from "./SignInModel";
 import { useAuth } from "../../context/AuthContext";
 
@@ -48,7 +48,7 @@ const Header = () => {
                     <span className="cursor-pointer text-sm font-medium border rounded-full border-gray-300 p-2">
                       <FaUser className="text-gray-500" />
                     </span>
-                    <span onClick={() => navigate(`/profile/${user?._id}`)} className="text-sm -ml-3 font-normal cursor-pointer hover:text-red-500">
+                    <span onClick={() => navigate(`/profile/${user?._id}/profile`)} className="text-sm -ml-3 font-normal cursor-pointer hover:text-red-500">
                       Hi, {user ? user?.name : "Test User"} &nbsp; ▼
                     </span>
                   </>

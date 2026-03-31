@@ -128,7 +128,6 @@ const Checkout = () => {
     mutationFn : (reqData) => verifyPaymentRazorpay(reqData),
     onSuccess: (data) => {
       toast.success(data?.data.message)
-      navigate(`/profile/${user._id}`)
     },
     onError: (err) => {
       console.log(err);
@@ -145,7 +144,7 @@ const Checkout = () => {
         userId: user._id,
         seatIds: selectedSeats
       })
-      navigate(`/profile/${user._id}`);
+      navigate(`/profile/${user._id}/booking`);
     },
     onError: (err) => {
       console.log(err);

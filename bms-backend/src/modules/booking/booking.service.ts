@@ -87,14 +87,14 @@ export const getAllBookings = async (userId : string) => {
     .populate(
         {
             path : "showId",
-            select : "startTime date audioType format",
+            select : "startTime date audioType",
             populate : [
                 {
-                path : "movieId",
-                select : "title posterUrl duration"
+                path : "movie",
+                select : "title posterUrl duration format"
             },
             {
-                path : "theatreId",
+                path : "theater",
                 select : "name location city state"
             }
             ]
