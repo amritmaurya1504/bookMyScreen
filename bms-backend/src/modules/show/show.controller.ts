@@ -35,18 +35,3 @@ export const getShowById = async (req:Request, res:Response, next: NextFunction)
         next(error);
     }
 }
-
-export const updateSeatStatus = async (req:Request, res: Response, next: NextFunction) => {
-    try {
-        
-        const { row, seatNumber, status } = req.query;
-
-        const updatedShow = await ShowService.updateSeatStatus(req.params.showId as string, 
-            row as string, Number(seatNumber), status as "AVAILABLE" | "BOOKED" | "BLOCKED");
-        
-        res.status(201).json(updatedShow);
-
-    } catch (error) {
-        next(error);
-    }
-}

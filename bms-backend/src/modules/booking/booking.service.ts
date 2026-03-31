@@ -4,7 +4,7 @@ import { IBooking } from "./booking.interface";
 import BookingModel from "./booking.model";
 import Razorpay from "razorpay";
 import { config } from "../../config/config";
-import path from "path";
+import { updateSeatStatus } from "../show/show.service";
 
 
 export const createBooking = async (booking: IBooking, userId: string) => {
@@ -65,6 +65,9 @@ export const createBooking = async (booking: IBooking, userId: string) => {
                     ],
                 { session }
             );
+
+                // 🔹 8. Update Seat Status in Show Document
+            await updateSeatStatus(showId, seats, "BOOKED", session);
 
             // Persist data permanently
             await session.commitTransaction();

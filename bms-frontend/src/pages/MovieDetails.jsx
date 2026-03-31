@@ -38,7 +38,7 @@ const MovieDetails = () => {
       <div
         className="relative text-white font-sans px-4 py-10"
         style={{
-          backgroundImage: `url(${movie?.data.movie.posterUrl})`,
+          backgroundImage: `url(${movie?.data?.movie?.posterUrl})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

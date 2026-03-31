@@ -122,7 +122,7 @@ export const registerSocketHandlers = (socket: Socket, io: Server) => {
 
   socket.on("unlock-seats", async ({ showId, seatIds, userId }) => {
     if (!showId || !seatIds?.length) return;
-
+    console.log("Unlock seats request")
     const lockedSeatsKeys = `locked-seats:${showId}`;
 
     for (const seatId of seatIds) {

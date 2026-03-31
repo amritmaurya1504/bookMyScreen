@@ -19,18 +19,18 @@ const Seat = ({ seat, row, selectedSeats, lockedSeats , onClick }) => {
     <button
       className={`w-9 h-9 m-[2px] rounded-lg border text-sm
         ${
-          seat.status === "occupied"
-            ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+          seat.status === "BOOKED"
+            ? "bg-gray-100 border-red-200 text-red-400 cursor-not-allowed"
             : isLocked
             ? "bg-gray-200 border-gray-300 text-gray-400 cursor-not-allowed"
             : isSelected
             ? "bg-[#6e52fa] text-white border-[#cec4f7] border-3 cursor-pointer"
             : "hover:bg-gray-100 border-black cursor-pointer"
         }`}
-      disabled={seat.status === "occupied" || isLocked}
+      disabled={seat.status === "BOOKED" || isLocked}
       onClick={onClick}
     >
-      {seat.status === "occupied" || isLocked ? "X" : seat.number}
+      {seat.status === "BOOKED" || isLocked ? "X" : seat.number}
     </button>
   );
 };
