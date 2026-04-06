@@ -8,8 +8,45 @@ This system includes advanced features like **concurrent seat locking**, **real-
 
 ---
 
-<!-- ## 📺 Watch the Full Playlist:
-👉 [YouTube Playlist](#) *(Add link here)* -->
+## ⚠️ Important Note (Must Read Before Using Code)
+
+> 🚫 **Please do NOT blindly copy-paste the code from this project.**
+
+This is a **complex, real-world full-stack system** involving:
+- Concurrent seat booking logic  
+- Real-time updates  
+- Backend + frontend integration  
+- Structured architecture  
+
+👉 If you directly copy the code, you may face:
+- ❌ Errors during setup  
+- ❌ Confusion in understanding flow  
+- ❌ Issues in execution and debugging  
+
+---
+
+### ✅ Recommended Approach
+
+✔ Follow the **YouTube tutorial step-by-step** on **Programming with Amrit**  
+✔ Understand each module (Auth, Show, Booking, Seat Locking, etc.)  
+✔ Then implement the code alongside the tutorial  
+
+---
+
+### 💡 Why this matters?
+
+This project is designed to help you:
+- Think like a real developer 🧠  
+- Understand system design + architecture  
+- Learn how real booking systems work  
+
+👉 Following the tutorial will ensure **smooth execution + deep understanding**
+
+---
+
+## 📺 Watch the Full Playlist:
+👉 [YouTube Playlist](#) *(https://www.youtube.com/playlist?list=PL9OdiypqS7NlD84nIN-rAh9D-LtzNi10R)* -->
+
 
 
 ## 📋 Flow Chart for Project Structure:
