@@ -45,7 +45,7 @@ This project is designed to help you:
 ---
 
 ## 📺 Watch the Full Playlist:
-👉 [YouTube Playlist](#) *(https://www.youtube.com/playlist?list=PL9OdiypqS7NlD84nIN-rAh9D-LtzNi10R)* -->
+👉 [YouTube Playlist](https://www.youtube.com/playlist?list=PL9OdiypqS7NlD84nIN-rAh9D-LtzNi10R)
 
 
 
