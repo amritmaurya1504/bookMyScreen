@@ -1,21 +1,103 @@
-version: '3.8'
 services:
+
   mongo:
     image: mongo:6
-    command: --replSet rs0 --bind_ip_all
+    container_name: bms-mongo
+    restart: always
+
+    command: >
+      mongod --replSet rs0 --bind_ip_all
+
     ports:
       - "27017:27017"
+
+    volumes:
+      - mongo_data:/data/db
+
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 10s
       timeout: 10s
       retries: 5
+    networks:
+      - bookmyscreen-network
 
   mongo-init:
     image: mongo:6
+
     depends_on:
       mongo:
         condition: service_healthy
+
+    restart: "no"
+
     command: >
-      mongosh --host mongo:27017 --eval
-      'rs.initiate({_id:"rs0",members:[{_id:0,host:"mongo:27017"}]})'
+      bash -c "
+        sleep 5 &&
+        mongosh --host mongo:27017 --eval '
+          try {
+            rs.status()
+          } catch (e) {
+            rs.initiate({
+              _id: \"rs0\",
+              members: [{ _id: 0, host: \"mongo:27017\" }]
+            })
+          }
+        '
+      "
+    networks:
+      - bookmyscreen-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: bms-redis
+    restart: always
+
+    ports:
+      - "6379:6379"
+
+    networks:
+      - bookmyscreen-network  
+
+  backend:
+    image: amritmaurya1504/bms-backend:v1
+    container_name: bms-backend
+    restart: always
+
+    ports:
+      - "9000:9000"
+
+    env_file:
+      - ./bms-backend/.env
+
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+
+    networks:
+      - bookmyscreen-network    
+
+  frontend:
+    image: amritmaurya1504/bms-frontend:v1
+    container_name: bms-frontend
+    restart: always
+
+    ports:
+      - "5173:80"
+
+    env_file:
+      - ./bms-frontend/.env
+
+    depends_on:
+      - backend
+    networks:
+      - bookmyscreen-network      
+
+volumes:
+  mongo_data:
+
+networks:
+  bookmyscreen-network:
+    driver: bridge

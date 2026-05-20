@@ -7,9 +7,13 @@
     "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/server.ts",
+    "docker:publish": "docker build -t amritmaurya1504/bms-backend:v1 --platform linux/amd64 . && docker push amritmaurya1504/bms-backend:v1",  
     "seed:theaters": "ts-node src/scripts/seed-theaters.ts",
     "seed:movies": "ts-node src/scripts/seed-movies.ts",
-    "seed:shows": "ts-node src/scripts/seed-shows.ts"
+    "seed:shows": "ts-node src/scripts/seed-shows.ts",
+    "seed1": "node dist/scripts/seed-theaters.js",
+    "seed2": "node dist/scripts/seed-movies.js",
+    "seed3": "node dist/scripts/seed-shows.js"
   },
   "author": "ProgrammingWithAmrit",
   "license": "ISC",

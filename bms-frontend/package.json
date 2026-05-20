@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "docker:publish": "docker build -t amritmaurya1504/bms-frontend:v1 --platform linux/amd64 . && docker push amritmaurya1504/bms-frontend:v1",  
     "lint": "eslint .",
     "preview": "vite preview"
   },
