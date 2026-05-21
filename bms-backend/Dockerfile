@@ -1,21 +1,3 @@
-# FROM node:20
-
-# WORKDIR /app
-
-# COPY package*.json ./
-
-# RUN npm install
-
-# COPY . .
-
-# RUN npm run build
-
-# EXPOSE 9000
-
-# RUN chmod +x start.sh
-
-# CMD ["sh", "start.sh"]
-
 # Build stage
 FROM node:20-alpine AS build
 
